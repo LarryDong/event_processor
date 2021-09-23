@@ -2,35 +2,13 @@
 
 #include <gflags/gflags.h>
 #include <opencv2/opencv.hpp>
+#include <processor.hpp>
 
 
 using namespace std;
 
-class CameraConfig{
-public:
-    CameraConfig(void) { cout << "Empyt init not supported"; }
-    CameraConfig(int width, int height, double r = 1.0) : width(width), height(height), r(r) {}
-    int width;
-    int height;
-    double r;
-
-    cv::Size getSize(void) { return cv::Size(width, height); }
-};
-
-
-class EventPoint{
-public:
-    EventPoint(int x, int y, int p = 0) : x(x), y(y), p(p) {}
-    int x;
-    int y;
-    int p;
-
-    cv::Point getPoint(void) { return cv::Point(x, y); }
-};
-
 
 CameraConfig g_cameraConfig(1280, 800, 0.2);
-
 
 DEFINE_string(event_file, "/home/larrydong/output/celex.txt", "event file");
 DEFINE_string(ts_file, "/home/larrydong/output/image/image_ts.txt", "image ts file");
@@ -63,6 +41,22 @@ cv::Mat getEventFrame(const vector<EventPoint>& eps, cv::Size image_size = cv::S
     for(auto ep : eps){
         int idx = ep.y * image_size.width + ep.x;
         uchar v = ep.p == 0 ? 0 : 255;
+        data[idx] = v;
+    }
+    return img;
+}
+
+
+cv::Mat getAccumulateFrame(const vector<EventPoint>& eps, cv::Size image_size = cv::Size(1280, 1024)){
+    cv::Mat img = cv::Mat::zeros(image_size, CV_8UC1);
+    img.setTo(0);
+    uchar *data = img.data;
+    for(auto ep : eps){
+        int idx = ep.y * image_size.width + ep.x;
+        // uchar v = ep.p == 0 ? 0 : 255;
+        int v = data[idx];
+        v += 10;
+        v = (v > 255 ? 255 : (v < 0 ? 0 : v));
         data[idx] = v;
     }
     return img;
@@ -106,13 +100,17 @@ int main(int argc, char **argv){
             f_events >> ts >> x >> y >> p;
             event_points.push_back(EventPoint(x, y, p));
         }
-        cv::Mat img = getEventFrame(event_points, g_cameraConfig.getSize());
+        // cv::Mat img = getEventFrame(event_points, g_cameraConfig.getSize());
+        cv::Mat img = getAccumulateFrame(event_points, g_cameraConfig.getSize());
         cv::imshow("img", img);
         cv::waitKey(1);
         cout << "show event frame to: " << ts << endl;
         uchar c = cv::waitKey(0);
-        if (c == 'q')
+        if (c == 'q'){
+            cout << "quit..." << endl;
             return 0;
+        }
+            
     }
 
     return 0;
