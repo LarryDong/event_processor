@@ -42,12 +42,11 @@ DEFINE_int32(time_duration, 50, "time_duration from file or 50ms");
 int readTimestampFile(const string & filename, vector<size_t> & image_ts){
     ifstream f_ts(filename);
     if(!f_ts.is_open()){
-        cout << "Cannot open ts file from: " << FLAGS_ts_file << endl;
-        return -1;
+        cout << "[Error] Cannot open ts file from: " << FLAGS_ts_file << endl;
+        std::abort();
     }
     image_ts.resize(0);
     while(!f_ts.eof()){
-        cout << "No image ts file. Using default duration: " << FLAGS_time_duration << " ms." << endl;
         int idx;
         size_t ts;
         f_ts >> idx >> ts;
@@ -74,19 +73,15 @@ int main(int argc, char **argv){
 
     google::ParseCommandLineFlags(&argc, &argv, true);
 
-
     vector<size_t> v_image_ts;
     if(FLAGS_ts_from_file){
         // Read image ts.
         if(readTimestampFile(FLAGS_ts_file, v_image_ts) == 0){
             cout << "Image ts from ( " << v_image_ts[0] << ", " << v_image_ts[v_image_ts.size() - 1] << ") us." << endl;
         }
-        else{
-            cout << "Error" << endl;
-            return -1;
-        }
     }
     else{
+        cout << "No image ts file. Using default duration: " << FLAGS_time_duration << " ms." << endl;
         for(int i=0; i<100; ++i){
             double ts = i * FLAGS_time_duration * 1e3;
             v_image_ts.push_back(ts);
@@ -97,7 +92,7 @@ int main(int argc, char **argv){
     // STEP 2. Read events & process.    
     ifstream f_events(FLAGS_event_file);
     if (!f_events.is_open()){
-        cout << "Cannot open ts file from: " << FLAGS_event_file << endl;
+        cout << "Cannot open events ts file from: " << FLAGS_event_file << endl;
         return -1;
     }
 
@@ -119,7 +114,6 @@ int main(int argc, char **argv){
         if (c == 'q')
             return 0;
     }
-
 
     return 0;
 }
