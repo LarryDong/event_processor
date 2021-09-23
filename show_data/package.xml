@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>show_data</name>
+  <version>0.0.0</version>
+  <description>Show event data from some files.</description>
+
+  <maintainer email="jfjxxdy2007@126.com">Larry Dong</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  
+  <exec_depend>roscpp</exec_depend>
+
+</package>
+
