@@ -8,13 +8,17 @@
 using namespace std;
 
 
-CameraConfig g_cameraConfig(1280, 800, 0.2);
-
 DEFINE_string(event_file, "/home/larrydong/output/celex.txt", "event file");
 DEFINE_string(ts_file, "/home/larrydong/output/image/image_ts.txt", "image ts file");
 
 DEFINE_bool(ts_from_file, true, "ts from file or 50ms");
 DEFINE_int32(time_duration, 50, "time_duration from file or 50ms");
+
+DEFINE_int32(camera_width, 1280, "camera width");
+DEFINE_int32(camera_height, 800, "camera height");
+
+
+
 
 
 int readTimestampFile(const string & filename, vector<size_t> & image_ts){
@@ -66,6 +70,7 @@ cv::Mat getAccumulateFrame(const vector<EventPoint>& eps, cv::Size image_size = 
 int main(int argc, char **argv){
 
     google::ParseCommandLineFlags(&argc, &argv, true);
+    CameraConfig cameraConfig(FLAGS_camera_width, FLAGS_camera_height, 1);
 
     vector<size_t> v_image_ts;
     if(FLAGS_ts_from_file){
@@ -100,8 +105,8 @@ int main(int argc, char **argv){
             f_events >> ts >> x >> y >> p;
             event_points.push_back(EventPoint(x, y, p));
         }
-        // cv::Mat img = getEventFrame(event_points, g_cameraConfig.getSize());
-        cv::Mat img = getAccumulateFrame(event_points, g_cameraConfig.getSize());
+        cv::Mat img = getEventFrame(event_points, cameraConfig.getSize());
+        // cv::Mat img = getAccumulateFrame(event_points, cameraConfig.getSize());
         cv::imshow("img", img);
         cv::waitKey(1);
         cout << "show event frame to: " << ts << endl;
