@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include <gflags/gflags.h>
 #include <opencv2/opencv.hpp>
