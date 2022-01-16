@@ -26,5 +26,8 @@ include_directories(
 
 link_directories()
 
-add_executable(show_data_node src/show_data.cpp)
-target_link_libraries(show_data_node  ${catkin_LIBRARIES} ${OpenCV_LIBS} gflags)
+add_executable(offline_viewer 
+    src/offline_viewer.cpp
+    src/functions.cpp
+)
+target_link_libraries(offline_viewer ${catkin_LIBRARIES} ${OpenCV_LIBS} gflags)

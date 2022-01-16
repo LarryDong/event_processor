@@ -1,0 +1,5 @@
+<launch>
+    <node name="offline_viewer" pkg="show_data" type="offline_viewer" output="screen"
+    args="--flagfile=$(find show_data)/conf/settings.cfg" />
+</launch>
+

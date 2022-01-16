@@ -1,5 +1,0 @@
-<launch>
-    <node name="show_data_node" pkg="show_data" type="show_data_node" output="screen"
-    args="--flagfile=$(find show_data)/conf/settings.cfg" />
-</launch>
-

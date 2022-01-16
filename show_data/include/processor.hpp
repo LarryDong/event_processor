@@ -26,3 +26,7 @@ public:
     cv::Point getPoint(void) { return cv::Point(x, y); }
 };
 
+
+int readTimestampFile(const string & filename, vector<size_t> & image_ts);
+cv::Mat getEventFrame(const vector<EventPoint>& eps, cv::Size image_size = cv::Size(1280, 1024));
+cv::Mat getAccumulateFrame(const vector<EventPoint>& eps, cv::Size image_size = cv::Size(1280, 1024));
